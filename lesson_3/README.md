@@ -31,11 +31,34 @@ class DongVat {
 }
 ```
 
-## 2. Phạm vi truy cập
+## 2. Object và Instance
+
+### Object
+- Object là một thực thể cụ thể được tạo ra từ class
+- Đối tượng (Object): bao gồm 2 thông tin: thuộc tính và phương thức
+### Instance
+- Instance thực chất là một cách gọi khác của Object
+
+### Sự khác nhau giữa Object và Instance
+
+```java
+Person john = new Person();
+```
+
+- Trong câu lệnh trên, bên trái dấu `=` sẽ là `Object` và bên phải dấu `=` sẽ là `Instance`
+- Instance `new Person()` được lưu ở bộ nhớ `Heap`;
+- Biến tham chiếu `john` được lưu vào bộ nhớ `Stack` và trỏ đến địa chỉ của Instance `new Person()` ở `Heap`
+
+```java
+Person john = new Person();
+Person wick = john;
+```
+- Khi này có 2 đối tượng được tạo ra nhưng chỉ có 1 instance
+## 3. Phạm vi truy cập
 
 ![Phạm vi truy cập](resource/images/pham_vi_truy_cap.webp)
 
-## 3. Constructor và Getter, Setter
+## 4. Constructor và Getter, Setter
 ### Constructor
 ```java
 class DongVat {
@@ -98,7 +121,7 @@ public class Main {
 }
 ```
 
-## 4. Từ khóa `this`
+## 5. Từ khóa `this`
 - Trong Java, từ khóa "this" tham chiếu đến thể hiện của lớp đang thực thi, cho phép truy cập vào các thành viên (biến và phương thức) của thể hiện đó
 ```java
 public class Student {
@@ -112,5 +135,5 @@ public class Student {
 
 ## Bài tâp thực hành
 ### Bài 1: Thiết kế lớp User với các thông tin như sau:
-![Thông tin class User](resource/images/bai1.png)
+![Thông tin class User](https://plantuml.online/png/Iyv9B2vM22rEBLAevb800bs5pBmIAuNYagBCl7IeI5vYRYgQK59YJc9UCb0q9RyqAISL8geBfhJ1ncbafbY1ZD91qQr9K8KEkj4mBUcf9Puf6aWyFw0kEByOZP-IMf1Vd5cYaPYRNmho3wfPvPab6Iv5YUKQ6FAr0000)
 ### Bài 2: Từ lớp User đã tạo ở bài 1, hãy khởi tạo 1 mảng đối tượng User bao gồm 3 User và thực hiện chức năng chuyển tiền cho nhau

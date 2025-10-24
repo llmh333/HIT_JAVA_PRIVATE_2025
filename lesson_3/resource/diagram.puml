@@ -1,0 +1,15 @@
+@startuml
+class User {
+    - int: string
+    - name: string
+    - balance: double
+    --
+    + User(id: int, name: string)
+    + User(id: int, name: string, balance: double)
+    + getId()
+    + getName()
+    + setName()
+    + deposit(amount: double)
+    + withDraw((amount: double)
+}
+@enduml
