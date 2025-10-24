@@ -215,4 +215,4 @@ public class Dog extends Animal {
 ## Bài tập thực hành
 ### Bài tập: Thực hiện thiết kế các lớp sau:
 
-![](https://plantuml.online/png/ZP5D3i8W48Ntd6AM_d61BanSk3GkwWL6Egsab1gWCOrwTrlQqX8JumQO3-QzcK4ej1QErLtLBH4y6G07cIKWjVDdZHKbO9sHkl10r8rsfesOHOKzokhcggX7l5ksK91pP7PW_UxHepRbQitUZ0bldQAYr66UUs_TL5SozfptE1GnY8MNNNeSVsUj_xM_aBXfAIJgiNVNWRIKIYqR_DdDB7P2ZGMPKSbEzTa43iPW6_G7mu2x_7aAdB_suJ_OehpuOhAAQS0RpkVvH7HMP1y0)
+![](https://plantuml.online/png/VP5BRi8m48RtFiKiWTONo08991OiAXRf1GPd4YmS1zcEggZbxYG6nh50tUJnUVm_R6NGUzYr5zCDHF0h02JegW1jG_oss581FZXjcmXKrzlWXenvD3YXgkkFXYOanyS7D1G2kK_myHtHJ-VEYwMu2g6YTOc6oe1r7Rrjtnx9-KCzOGvn5-F9SNl-_xfh-SwUFRz9dQnM6ksZS1X1UTR6p5l9VpM-q693xY7Wdrby0HldS63PkyySiouNs0xxQi4I-oglaDB6kIJAWsEeT8nI_gtvGiMiQhxmp9zJnYifqm5dD2dU0000)
