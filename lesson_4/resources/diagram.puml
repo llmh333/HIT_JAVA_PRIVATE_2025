@@ -1,0 +1,42 @@
+@startuml
+
+class Employee {
+  - id: int
+  - name: string
+  - country: string
+  - salary: double
+  --
+  + getter, setter
+  + work()
+}
+
+class SaleStaff {
+  numbersOfSale: int
+  --
+  + SaleStaff()
+  + SaleStaff(numbersOfSale: int)
+  + getter, setter
+}
+
+class Technician {
+  - techSkill: string
+  --
+  + getter, setter
+}
+
+class Manager {
+  - saleStaffs: Array
+  - technicians: Array
+  --
+  + getSaleStaffById(saleStaffId: int)
+  + getTechnicianById(technicianId: int)
+}
+
+SaleStaff --|> Employee
+Technician --|> Employee
+Manager --|> Employee
+
+Manager *-- SaleStaff
+Manager *-- Technician
+
+@enduml
