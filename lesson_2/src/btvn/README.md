@@ -3,7 +3,7 @@
 
 ---
 
-### Bài tập: Nhập vào một mảng kí tự có N phần tử số nguyên. Sử dụng switch-case để nhận vào lựa chọn của người dùng với giao diện console như sau:
+### Bài tập: Nhập vào một mảng có N phần tử số nguyên. Sử dụng switch-case để nhận vào lựa chọn của người dùng với giao diện console như sau:
 ```text
 --- Menu ---
 1. Tính tổng các phẩn tử trong mảng
