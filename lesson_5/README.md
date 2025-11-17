@@ -217,7 +217,7 @@ public class Main {
 ---
 ## Bài tập thực hành
 ### Triển khai sơ đồ đối tượng sau:
-![](https://img.plantuml.biz/plantuml/png/jL993i8m3Bpd5Jw2KFi19CGcFj0Nk8sf8h9KILg4WB_JbRPgUuDS8izCxB6TlVDeVQuaIoGw1mSj54fuCYXF09ardX9F729lXKv1ewBj4ebfnmNrjO4iZwL8e322Wy8RHIRNVBNUpj24VfvGfg2AUJCcj2TxnOGWkWkbC9RKMesDaOGQN8bFn1Vvc95UvQDLDgsVJThrtTbVyZqrF7BQG3EMca8dz3ygz4rv59R_rVmOxKTN3Iq8NhlsuzHn69RnTq6CLVqEDQnsEqNgT-sk1aYVQK-QLr_r0m00)
+![](https://uml.planttext.com/plantuml/png/jL9P3e8m4FtlAUPJO_029WQNU05ECD21D7OnRS4OzUwo8m7-j3_Dl3VBcoLq7gtFbMI9HEVWe8L22Ky6vGlWPesdn1E7o5kXCz2eQBT4OjPnGVrju9R7KYHG6C51uPKYask-MkzcQ48_JoXJKCMy6HFQaqqn8OZkGYcC9RLIOsCaeGPNuXFdYtpCkARoqNeshPzDrlNToL_IFHKyKjf0CvAQGYVqFohKfpmAo_ygVemEewk65WIlVNiujRtTbdQ_e05gry1ODO3l85RBdoAZg04PKeUaUNMx7m00)
 - Yêu cầu:
   - Triển khai theo package:
     - model: `Dog`, `Cat`, `Bird`
