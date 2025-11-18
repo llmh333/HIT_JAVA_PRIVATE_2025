@@ -38,8 +38,8 @@ public class Cat extends Animal {
 
 public class Main {
     public static void main(String[] args) {
-        Dog dog = new Dog();
-        Cat cat = new Cat();
+        model.Dog dog = new model.Dog();
+        model.Cat cat = new model.Cat();
         
         // In ra "Gau gau"
         dog.makeSound();
@@ -167,7 +167,7 @@ public class Dog extends Animal{
 
 public class Main {
     public static void main(String[] args) {
-        Animal dog = new Dog();
+        model.Animal dog = new model.Dog();
     }
 }
 ```
@@ -198,16 +198,16 @@ public class Cat extends Animal {
 
 public class Main {
     public static void main(String[] args) {
-        Dog dog = new Dog();
-        Cat cat = new Cat();
-        Animal a = (Animal) dog;
-        Animal b = (Animal) cat;
-        List<Animal> animals = new ArrayList<>();
+        model.Dog dog = new model.Dog();
+        model.Cat cat = new model.Cat();
+        model.Animal a = (model.Animal) dog;
+        model.Animal b = (model.Animal) cat;
+        List<model.Animal> animals = new ArrayList<>();
         animals.add(a);
         animals.add(b);
         
-        for(Animal animal : animals) {
-            if (animal instanceof Dog) {
+        for(model.Animal animal : animals) {
+            if (animal instanceof model.Dog) {
                 animal.makeSound();
             }
         }
@@ -217,12 +217,13 @@ public class Main {
 ---
 ## Bài tập thực hành
 ### Triển khai sơ đồ đối tượng sau:
-![](https://uml.planttext.com/plantuml/png/jL9P3e8m4FtlAUPJO_029WQNU05ECD21D7OnRS4OzUwo8m7-j3_Dl3VBcoLq7gtFbMI9HEVWe8L22Ky6vGlWPesdn1E7o5kXCz2eQBT4OjPnGVrju9R7KYHG6C51uPKYask-MkzcQ48_JoXJKCMy6HFQaqqn8OZkGYcC9RLIOsCaeGPNuXFdYtpCkARoqNeshPzDrlNToL_IFHKyKjf0CvAQGYVqFohKfpmAo_ygVemEewk65WIlVNiujRtTbdQ_e05gry1ODO3l85RBdoAZg04PKeUaUNMx7m00)
+![](https://uml.planttext.com/plantuml/png/jLHBRiCW5Dnp2fQfAkS2gQAahIf5wiudU3Ol5YeV2x2hgEtTQnlZYfhq8oTia6OUZu4Ps5a7nZLIa5A0jNIlk0H1tmZjHaPhensM3XdDdU6geWeaRiwHK0Kk6wPRMZU5u2LjDMTKmWlckb5iTRD9q0WkJKZTOizy4CALGtE44cd-ogM4Gk0ejT1Q82XgEtnM_2HEYTAZECqg3_xyEPgMbs719EUPMtVdAxOKXjbEGbOfzlk1KZMZkZ-j3zeP2dGuYlsNWXyxx1NxHKrtNJueZxeAAGbcdtDvRc_aguSI1lgD7i1TQAEfvJqtxAhYO_GhQ7xxE6G7MVltjZHcoqAsD68N31WPFw7r-dqRtcw4JUq8wMEOPHtcUKBwk4J0O7Q49Ev_Q1lZXEnGiVvd_0G0)
 - Yêu cầu:
   - Triển khai theo package:
-    - model: `Dog`, `Cat`, `Bird`
+    - model: `Dog`, `Cat`, `Bird`, `Animal`
     - constant: (tự các bạn định nghĩa)
-    - service: (các interface sẽ để trong package này)
+    - service: `Swimmable`, `Flyable`, `IAnimalService`
+    - service.impl: `IAnimalServiceImpl`
   - Khởi tạo 1 danh sách gồm 5 đối tượng animal:
     - Kiểm tra và in ra các con vật có thể bơi.
     - Kiểm tra và in ra các con vật có thể bay.
