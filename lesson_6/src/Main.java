@@ -17,7 +17,5 @@ public class Main {
         list.add("d");
         list.add("a");
 
-        List<String> filterList = list.stream().filter(element -> element.equals("a")).collect(Collectors.toList());
-        List<String> mapList = list.stream().map(element -> element.toUpperCase()).collect(Collectors.toList());
     }
 }
