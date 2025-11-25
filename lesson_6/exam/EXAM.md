@@ -4,7 +4,7 @@
 
 ## Thời gian: 60 phút
 ## Cách thức nộp bài: Upload code lên Github và gửi link vào bài viết dưới đây
-## Link nộp bài tập: https://www.facebook.com/groups/1463667454320017/?multi_permalinks=1756214275065332&hoisted_section_header_type=recently_seen&locale=vi_VN 
+## Link nộp bài tập: https://web.facebook.com/groups/1512641553414735?locale=vi_VN
 (comment vào nhóm của mình dưới phần bình luận)
 
 ---
