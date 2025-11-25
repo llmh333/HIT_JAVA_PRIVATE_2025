@@ -17,7 +17,7 @@
 public static void main(String[] args) {
    ArrayList<Integer> array1 = new ArrayList<Integer>();
 
-   ArrayList<VD.Person> array2 = new ArrayList<VD.Person();
+   ArrayList<VD.Person> array2 = new ArrayList<VD.Person>();
 }
 ```
 - Lưu ý:
