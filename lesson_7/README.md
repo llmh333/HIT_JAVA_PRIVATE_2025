@@ -1,12 +1,20 @@
 # Thread, Regex, Exception, I/O
 
 ## Cơ bản về Thread (Luồng)
+### 1.Thread là gì? Tại sao cần dùng?
+- Khái niệm: Thread (Luồng) là đơn vị nhỏ nhất của việc xử lý trong một chương trình. Mặc định, Java chạy trên main thread.
+
+- Ví dụ thực tế: Hãy tưởng tượng một nhà hàng. 
+  - Single-thread (Đơn luồng): Chỉ có 1 nhân viên phục vụ. Cô ấy phải lấy order bàn 1, chờ bếp nấu, mang ra bàn 1, rồi mới được sang bàn 2. Khách hàng bàn 2 sẽ chờ rất lâu.
+  - Multi-thread (Đa luồng): Có 5 nhân viên. Trong khi nhân viên A chờ bếp nấu cho bàn 1, nhân viên B có thể đi lấy order ở bàn 2. Mọi việc diễn ra song song.
+  - 
 - Bình thường chúng ta code và chạy file Main, không có tác vụ nào khác, khi này code của chúng ta sẽ chạy một cách tuần tự, xử lí các tác vụ, công việc một cách tuần tự
 - Khi có nhiều các tác vụ cần xử lí đồng thời, khi này ta cần đến multithread.
 - Để hiểu và áp dụng được multithread thì ta cần hiểu về thread, cách tạo và chạy 1 thread.
+### 2. Cách tạo Thread trong JAVA
 - Để tạo 1 thread ta có 2 cách
 
-**Cách 1**: Ta cần kế thừa lại lớp `Thread` có sẵn trong java và override lại method run()
+#### **Cách 1**: Ta cần kế thừa lại lớp `Thread` có sẵn trong java và override lại method run()
 ```java
 // Định nghĩa 1 thread
 class MyThread extends Thread {
@@ -25,7 +33,7 @@ class Main {
 }
 ```
 
-**Cách 2**: Ta triển khai interface `Runnable` của thư viện `java.lang`
+#### **Cách 2**: Ta triển khai interface `Runnable` của thư viện `java.lang`
 ```java
 // Tạo 1 class triển khai Runnable
 class MyThread implements Runnable {
@@ -47,10 +55,29 @@ class Main {
 - **Lưu ý**: Tránh nhầm lẫn giữa lời gọi `.run()` và `.start()`
   - Khi gọi `.run()` thực chất chỉ là một lời gọi hàm thông thường, chương trình sẽ không tạo ra 1 luồng mới mà chỉ chạy trên luồng chính (Main thread)
   - Khi gọi `.start()`, khi này JVM sẽ cấp phát và tạo ra 1 luồng mới, tự động gọi hàm `.run()` và chạy song song với luồng chính (Main thread)
-- Khi này phát sinh ra 1 vần đề, nếu nhiều luồng cùng xử lí 1 dữ liệu, các thread sẽ tranh nhau thao tác vào dữ liệu đó, dẫn đến việc ghi chồng chéo, sai lệch dữ liệu. Thuật ngữ để nói về vấn đề này là `Race condition`
-- Để khắc phục lỗi này 1 cách đơn giản, ta dùng từ khóa `synchronized` cho method, khối câu lệnh cần được đảm bảo vẹn toàn dữ liệu.
 
-**Ví dụ 1**: 2 vợ chồng có chung 1 tài khoản ngân hàng có 1tr đồng. Người chồng rút ở cây ATM 1tr đồng, cùng lúc đó người vợ ở nhà thực hiện chuyển khoản 1tr đồng, vậy khi này ngân hàng sẽ phải xử lí vấn đề này, nếu không ngân hàng sẽ bị âm tiền
+#### 3. Vòng đời của Thread (Thread Lifecycle)
+- Hiểu vòng đời giúp bạn biết tại sao thread bị dừng hoặc chết.
+  - New: Vừa được khởi tạo (new Thread()).
+
+  - Runnable: Sẵn sàng chạy, đang chờ CPU cấp phát tài nguyên.
+
+  - Running: Đang thực thi mã lệnh.
+
+  - Blocked/Waiting: Đang chờ một thread khác (ví dụ chờ dữ liệu I/O, chờ khóa synchronized).
+
+  - Terminated: Hoàn thành công việc hoặc bị lỗi.
+#### 4. Các vấn đề cốt lõi và Lỗi thường gặp
+
+##### A. Race Condition (Điều kiện đua)
+Xảy ra khi nhiều thread cùng truy cập và sửa đổi một dữ liệu chung cùng lúc, dẫn đến dữ liệu sai lệch.
+- Ví dụ thực tế: Tài khoản ngân hàng.
+  - Tài khoản có 100$.
+  - Vợ (Thread A) rút 50$.
+  - Chồng (Thread B) rút 50$ cùng thời điểm.
+  - Nếu không kiểm soát, cả hai cùng thấy số dư là 100$ trước khi lệnh trừ tiền được ghi lại. Kết quả: Cả hai rút được tiền, tổng rút 100$, nhưng số dư có thể vẫn còn 50$ (sai lệch).
+
+- Cách khắc phục: Sử dụng từ khóa synchronized. Nó giống như việc "khóa cửa nhà vệ sinh", chỉ một người vào, người khác phải đợi người kia ra mới được vào.
 
 ```java
 class BankAccount {
@@ -106,65 +133,47 @@ public class RaceConditionRealWorld {
     }
 }
 ```
-**Ví dụ 2**: Người A chuyển tiền cho người B, cùng lúc đó người B cũng chuyển tiền cho người A
+##### B. Deadlock (Tắc nghẽn)
+Hai thread chờ nhau giải phóng tài nguyên, dẫn đến cả hai đứng yên mãi mãi.
+
+Ví dụ thực tế: Chuyển tiền ngân hàng.
+
+Xe A đi vào và cần khoảng trống của Xe B để thoát ra.
+
+Xe B đi vào và cần khoảng trống của Xe A để thoát ra.
+
+Cả hai xe đứng nhìn nhau mãi mãi
+
+- Cách khắc phục: Tránh việc lồng ghép các khối synchronized (Nested Locks) nếu không cần thiết. Luôn lock các tài nguyên theo một thứ tự nhất định.
+- Khi này ta sẽ phải xử lí logic chứ không còn là thêm các từ khóa code nữa, ta phải có logic nghiệp vụ khác
+### 5. Kiến thức nâng cao: Không dùng new Thread() nữa!
+Trong các dự án thực tế (Enterprise), người ta hiếm khi dùng new Thread() thủ công vì khó quản lý số lượng (tạo 1000 thread sẽ làm sập RAM). Chúng ta dùng ExecutorService (Thread Pool).
+
+- Ví dụ thực tế: Quầy giao dịch ngân hàng.
+  - Thay vì mỗi khi có khách đến lại tuyển 1 nhân viên mới (tạo Thread mới - tốn kém), ngân hàng chỉ có cố định 5 quầy (Fixed Thread Pool).
+  - Nếu có 100 khách, 5 khách được phục vụ, 95 khách còn lại xếp hàng (Queue).
 ```java
-class Account {
-    private String name;
-    private int balance;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-    public Account(String name, int balance) {
-        this.name = name;
-        this.balance = balance;
-    }
-
-    public String getName() { return name; }
-
-    // Logic chuyển tiền dễ gây Deadlock
-    public void transferTo(model.Account targetAccount, int amount) {
-        // 1. Khóa tài khoản của chính mình (người gửi)
-        synchronized (this) {
-            System.out.println(this.name + " đang giữ khóa của chính mình (" + this.name + ")...");
-
-            // Giả lập độ trễ mạng để đảm bảo Deadlock xảy ra cho học viên thấy
-            try { Thread.sleep(100); } catch (InterruptedException e) {}
-
-            System.out.println(this.name + " đang chờ lấy khóa của " + targetAccount.getName() + " để chuyển tiền...");
-
-            // 2. Cố gắng khóa tài khoản người nhận
-            synchronized (targetAccount) {
-                System.out.println("Đang chuyển tiền...");
-                this.balance -= amount;
-                targetAccount.balance += amount;
-                System.out.println("Chuyển thành công!");
-            }
-        }
-    }
-}
-
-public class DeadlockRealWorld {
+public class ThreadPoolExample {
     public static void main(String[] args) {
-        model.Account accA = new model.Account("Tài khoản A", 5000);
-        model.Account accB = new model.Account("Tài khoản B", 5000);
+        // Tạo một hồ chứa chỉ có 3 nhân viên (Threads)
+        ExecutorService executor = Executors.newFixedThreadPool(3);
 
-        // Thread 1: A chuyển cho B
-        Thread t1 = new Thread(() -> {
-            accA.transferTo(accB, 1000);
-        });
-
-        // Thread 2: B chuyển ngược lại cho A
-        Thread t2 = new Thread(() -> {
-            accB.transferTo(accA, 1000);
-        });
-
-        t1.start();
-        t2.start();
+        // Gửi 10 công việc vào
+        for (int i = 0; i < 10; i++) {
+            int taskId = i;
+            executor.submit(() -> {
+                System.out.println("Nhân viên " + Thread.currentThread().getName() + " đang xử lý task " + taskId);
+                try { Thread.sleep(1000); } catch (InterruptedException e) {}
+            });
+        }
         
-        // KẾT QUẢ: Chương trình sẽ chạy 2 dòng đầu rồi TREO MÁY VĨNH VIỄN.
-        // Đèn đỏ trên IDE vẫn sáng nhưng không có gì in ra thêm.
+        executor.shutdown(); // Đóng cửa sau khi làm hết việc
     }
 }
 ```
-- Khi này ta sẽ phải xử lí logic chứ không còn là thêm các từ khóa code nữa, ta phải có logic nghiệp vụ khác
 ## Xử lí Exception
 - Bình thường khi code, sẽ có những lỗi xảy ra mà ta không thể ngờ được, chia làm 2 loại exception:
   - Checked Exception (xảy ra khi compile)
@@ -212,7 +221,15 @@ class Main {
 - Trong java có rất nhiều cách để thực hiện đọc ghi dữ liệu sử dụng Java IO
 - Bài học hiện tại, ta chỉ tim hiểu về đọc ghi file. Bên cạnh đó còn rất nhiều công việc cần đến đọc ghi như trong socket, http,...
 - Để thực hiện đọc ghi 1 file dữ liệu, ta sử dụng `FileReader` và `FileWriter`
+### 1. Tư duy cốt lõi: Dòng chảy (Stream)
+Java coi việc đọc/ghi file giống như một dòng nước chảy qua ống dẫn.
 
+- Input Stream: Dòng nước chảy từ nguồn (File) vào chương trình của bạn.
+
+- Output Stream: Dòng nước chảy từ chương trình của bạn ra bể chứa (File).
+
+Để dễ hiểu, Java chia làm 2 loại ống dẫn chính:
+![img.png](img.png)
 ```java
 import java.io.FileReader;
 import java.io.FileWriter;
