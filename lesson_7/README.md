@@ -50,6 +50,121 @@ class Main {
 - Khi này phát sinh ra 1 vần đề, nếu nhiều luồng cùng xử lí 1 dữ liệu, các thread sẽ tranh nhau thao tác vào dữ liệu đó, dẫn đến việc ghi chồng chéo, sai lệch dữ liệu. Thuật ngữ để nói về vấn đề này là `Race condition`
 - Để khắc phục lỗi này 1 cách đơn giản, ta dùng từ khóa `synchronized` cho method, khối câu lệnh cần được đảm bảo vẹn toàn dữ liệu.
 
+**Ví dụ 1**: 2 vợ chồng có chung 1 tài khoản ngân hàng có 1tr đồng. Người chồng rút ở cây ATM 1tr đồng, cùng lúc đó người vợ ở nhà thực hiện chuyển khoản 1tr đồng, vậy khi này ngân hàng sẽ phải xử lí vấn đề này, nếu không ngân hàng sẽ bị âm tiền
+
+```java
+class BankAccount {
+    private int balance = 1000000; // Có 1 triệu
+
+    // Hàm rút tiền KHÔNG AN TOÀN (chưa có synchronized)
+    public void withdraw(int amount, String name) {
+        System.out.println(name + " đang kiểm tra số dư...");
+
+        // 1. Kiểm tra điều kiện (Check)
+        if (balance >= amount) {
+            // Giả lập độ trễ của mạng/database (mấu chốt gây lỗi ở đây)
+            // Trong lúc ông chồng đang chờ, bà vợ chen vào kiểm tra và thấy tiền vẫn còn
+            try { Thread.sleep(1000); } catch (InterruptedException e) {}
+
+            // 2. Trừ tiền (Act)
+            balance = balance - amount;
+            System.out.println(name + " đã rút thành công " + amount);
+        } else {
+            System.out.println(name + " giao dịch thất bại (Không đủ tiền).");
+        }
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+}
+
+public class RaceConditionRealWorld {
+    public static void main(String[] args) throws InterruptedException {
+        BankAccount sharedAccount = new BankAccount();
+
+        // Thread Chồng
+        Thread husband = new Thread(() -> {
+            sharedAccount.withdraw(10_000_000, "Ông Chồng");
+        });
+
+        // Thread Vợ
+        Thread wife = new Thread(() -> {
+            sharedAccount.withdraw(10_000_000, "Bà Vợ");
+        });
+
+        husband.start();
+        wife.start();
+
+        // Chờ 2 người rút xong để kiểm tra số dư cuối
+        husband.join();
+        wife.join();
+
+        System.out.println("----------------------------------");
+        System.out.println("Số dư cuối cùng: " + sharedAccount.getBalance());
+        // KẾT QUẢ SẼ LÀ: -1 triệu (Lỗi nghiêm trọng)
+    }
+}
+```
+**Ví dụ 2**: Người A chuyển tiền cho người B, cùng lúc đó người B cũng chuyển tiền cho người A
+```java
+class Account {
+    private String name;
+    private int balance;
+
+    public Account(String name, int balance) {
+        this.name = name;
+        this.balance = balance;
+    }
+
+    public String getName() { return name; }
+
+    // Logic chuyển tiền dễ gây Deadlock
+    public void transferTo(model.Account targetAccount, int amount) {
+        // 1. Khóa tài khoản của chính mình (người gửi)
+        synchronized (this) {
+            System.out.println(this.name + " đang giữ khóa của chính mình (" + this.name + ")...");
+
+            // Giả lập độ trễ mạng để đảm bảo Deadlock xảy ra cho học viên thấy
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
+
+            System.out.println(this.name + " đang chờ lấy khóa của " + targetAccount.getName() + " để chuyển tiền...");
+
+            // 2. Cố gắng khóa tài khoản người nhận
+            synchronized (targetAccount) {
+                System.out.println("Đang chuyển tiền...");
+                this.balance -= amount;
+                targetAccount.balance += amount;
+                System.out.println("Chuyển thành công!");
+            }
+        }
+    }
+}
+
+public class DeadlockRealWorld {
+    public static void main(String[] args) {
+        model.Account accA = new model.Account("Tài khoản A", 5000);
+        model.Account accB = new model.Account("Tài khoản B", 5000);
+
+        // Thread 1: A chuyển cho B
+        Thread t1 = new Thread(() -> {
+            accA.transferTo(accB, 1000);
+        });
+
+        // Thread 2: B chuyển ngược lại cho A
+        Thread t2 = new Thread(() -> {
+            accB.transferTo(accA, 1000);
+        });
+
+        t1.start();
+        t2.start();
+        
+        // KẾT QUẢ: Chương trình sẽ chạy 2 dòng đầu rồi TREO MÁY VĨNH VIỄN.
+        // Đèn đỏ trên IDE vẫn sáng nhưng không có gì in ra thêm.
+    }
+}
+```
+- Khi này ta sẽ phải xử lí logic chứ không còn là thêm các từ khóa code nữa, ta phải có logic nghiệp vụ khác
 ## Xử lí Exception
 - Bình thường khi code, sẽ có những lỗi xảy ra mà ta không thể ngờ được, chia làm 2 loại exception:
   - Checked Exception (xảy ra khi compile)
