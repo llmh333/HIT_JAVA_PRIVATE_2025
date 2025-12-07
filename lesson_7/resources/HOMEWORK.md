@@ -4,7 +4,7 @@
 
 ### Bài tập: Viết chương trình mô phỏng cuộc đua giữa 3 chiếc xe (3 Threads).
 
-- Class Car kế thừa Runnable:
+- Class Car triển khai Runnable:
   - `name`: String
   - `speed`: double (Giây / 1 km)
 Trong phương thức run():
