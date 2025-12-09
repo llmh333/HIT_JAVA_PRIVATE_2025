@@ -142,3 +142,40 @@ public class UserDAO {
     }
 }
 ```
+
+## Bài tập thực hành
+
+### Phần 1: Thiết kế Cơ sở dữ liệu
+``` SQL
+CREATE DATABASE inventory_db;
+USE inventory_db;
+
+-- Bảng danh mục (Ví dụ: Điện tử, Thời trang...)
+CREATE TABLE category (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL
+);
+
+-- Bảng sản phẩm, có khóa ngoại trỏ về category
+CREATE TABLE product (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    price DOUBLE NOT NULL,
+    category_id INT,
+    FOREIGN KEY (category_id) REFERENCES category(id)
+);
+
+-- Data mẫu
+INSERT INTO category (name) VALUES ('Laptop'), ('Mobile');
+```
+
+### Phần 2: Cấu trúc Project Java
+- model: Chứa các entity
+- dao: Chứa code JDBC
+- utils: Chứa DB Connection
+- constrant: Chứa các định nghĩa, hằng số
+- service: Chứa các logic nghiệp vụ
+- exception (nếu có): Chứa custom exceprion
+- main
+
+<img width="744" height="812" alt="image" src="https://github.com/user-attachments/assets/bba97f9d-7ddd-4c48-8c2c-474f22ba7936" />
