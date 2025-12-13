@@ -1,10 +1,9 @@
 # Cơ bản về JDBC
 
-## Khái niệm
+## Tổng quan: JDBC là gì và tại sao cần nó?
 - `JDBC` là viết tắt của `Java Database Connectivity`
-- JDBC là API chuẩn của Java dùng để kết nối và thao tác với Database.
-- JDBC thiết kế, quy định ra các Interface và các hãng hệ quản trị cơ sở dữ liệu sẽ tự viết các thư viện triển khai các Interface đó
-- Vì vậy khi cần thay đổi Hệ quản trị cơ sở dữ liệu, ta chỉ cần thay đổi thư viện và thay đổi `url` của database, không cần viết lại code.
+- JDBC là một API tiêu chuẩn của Java cho phép các ứng dụng Java tương tác với các hệ quản trị cơ sở dữ liệu (DBMS) khác nhau (MySQL, PostgreSQL, Oracle, SQL Server...).
+- Nó đóng vai trò như một chiếc "cầu nối" hoặc một "người phiên dịch". Java nói tiếng Java, Database nói tiếng SQL, JDBC Driver sẽ phiên dịch giữa hai bên.
 
 ## Thiết kế kiến trúc
 - Kiến trúc `JDBC` gồm 2 phần chính:
@@ -13,8 +12,17 @@
 - Bộ công cụ để thao tác với cơ sở dữ liệu
 - Cung cấp các Interface như: `Statement`, `PreparedStatement`,...
   **`JDBC Driver`**:
-- Là các file `.jar` (ví dụ: `mysql-connector-java.jar`, `ojdbc.jar`,...)
+- Là phần mềm do nhà cung cấp Database viết.
 - Chứa các `class` cụ thể implements các interface ở trên.
+
+## Các thành phần cốt lõi
+| Thành phần      | Vai trò                                    | Ví dụ đời thực                        |
+| :---------------| :------------------------------------------| :------------------------------------ |
+| `DriverManager` | Quản lý danh sách các Driver.              | Người điều phối xe.                   |
+| `Connection`    | Đại diện cho phiên làm việc vật lý với DB. | Đường dây điện thoại đã được kết nối. |
+| `Statement`     | Đối tượng để gửi câu lệnh SQL tới DB.      | Chiếc xe chở hàng (câu lệnh SQL).     |
+| `ResultSet`     | Chứa dữ liệu trả về từ câu lệnh SELECT.    | Thùng hàng nhận được.                 |
+| `SQLExceptione` | Lớp xử lý lỗi đặc thù của Database.        | Báo cáo sự cố.                        |
 
 ## Quy trình triển khai
 - Bước 1: Load Driver: Nạp Driver của DB vào bộ nhớ
@@ -65,13 +73,18 @@ try {
 
 - Có rất nhiều cách viết query tới DB, chúng ta sẽ đề cập đến 2 cách phổ biến nhất đó là sử dụng `Statment` và `PrepareStatment`
 
+### Phân biệt Statement vs. PreparedStatement
+1. Statement:
+- Dùng cho câu lệnh SQL tĩnh, không tham số.
+- Nguy hiểm: Dễ bị tấn công SQL Injection nếu nối chuỗi.
+- Ví dụ xấu: String sql = "SELECT * FROM users WHERE name = '" + userName + "'";
+2. PreparedStatement (Khuyên dùng):
+- Dùng cho câu lệnh SQL động, có tham số (?).
+- Lợi ích:  
+  - Chống SQL Injection (tự động escape ký tự đặc biệt).
+  - Hiệu năng cao hơn.
+
 ### `Statment`
-
-- Dùng để thực thi câu lệnh SQL gửi tới Database
-- Mỗi lần chạy Database sẽ xử lí câu lệnh từ đầu -> (static SQL)
-
-Cách sử dụng:
-
 ```java
 import java.sql.ResultSet;
 
@@ -97,18 +110,11 @@ public class UserDAO {
 }
 ```
 
-- `ResultSet` là một `interface` chứa các phương thức để thao tác với dữ liệu trả về từ câu lệnh truy vấn, được triển khai bởi các thư viện đặc thù của từng Hệ quản trị cơ sở dữ liệu.
 - Hàm `.next()` để kiểm tra phần tử tiếp theo của danh sách kết quả trả về có tồn tại không, nếu có con trỏ sẽ nhảy đến phần tử đó.
-
-Nhược điểm:
-- Sử dụng `Statement` kém hiệu suất, đặc biệt dễ bị dính lỗ hổng bảo mật là `SQL Injection`
 
 ### `PrepareStatement`
 
-- Cũng dùng để thực thi câu lệnh SQL gửi tới Database
 - Khi chạy lần đầu, Database ghi nhớ và cache câu lệnh này lại, các lần thực hiện tiếp theo chỉ thay tham số -> hiệu suất cao
-
-Cách sử dụng
 
 ```java
 import java.sql.PreparedStatement;
@@ -125,7 +131,7 @@ public class UserDAO {
             statement.setInt(1, age);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                String name = resultSet.getClob("name");
+                String name = resultSet.getString("name");
                 double age = resultSet.getDouble("age");
             }
         } catch (Exception e) {
@@ -137,6 +143,39 @@ public class UserDAO {
 }
 ```
 
-- Ta sẽ không viết câu lệnh tĩnh nữa, mà sẽ để `?` ở những nơi cần truyền giá trị, sau đó set giá trị thông qua lệnh
-- Việc thực hiện như này sẽ loại bỏ được lỗ hổng bảo mật `SQL Injection`.
-- Tăng hiệu suất cho chương trình.
+## Bài tập thực hành
+
+### Phần 1: Thiết kế Cơ sở dữ liệu
+``` SQL
+CREATE DATABASE inventory_db;
+USE inventory_db;
+
+-- Bảng danh mục (Ví dụ: Điện tử, Thời trang...)
+CREATE TABLE category (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL
+);
+
+-- Bảng sản phẩm, có khóa ngoại trỏ về category
+CREATE TABLE product (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    price DOUBLE NOT NULL,
+    category_id INT,
+    FOREIGN KEY (category_id) REFERENCES category(id)
+);
+
+-- Data mẫu
+INSERT INTO category (name) VALUES ('Laptop'), ('Mobile');
+```
+
+### Phần 2: Cấu trúc Project Java
+- model: Chứa các entity
+- dao: Chứa code JDBC
+- utils: Chứa DB Connection
+- constrant: Chứa các định nghĩa, hằng số
+- service: Chứa các logic nghiệp vụ
+- exception (nếu có): Chứa custom exceprion
+- main
+
+<img width="744" height="812" alt="image" src="https://github.com/user-attachments/assets/bba97f9d-7ddd-4c48-8c2c-474f22ba7936" />
